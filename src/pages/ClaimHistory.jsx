@@ -1,22 +1,34 @@
-// ClaimedCoupons.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ClaimHistory = () => {
+  const navigate = useNavigate();
 
   const [coupons, setcoupons] = useState([]);
 
-  useEffect(() => {  
+  useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/claimHistory');
+        const response = await axios.get(
+          "http://localhost:5000/api/admin/claimHistory"
+        );
         setcoupons(response.data);
       } catch (error) {
-        console.error('Error fetching coupons:', error);
+        console.error("Error fetching coupons:", error);
       }
     };
 
     fetchCoupons();
+  }, []);
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("isLogged") === "true";  // Convert to Boolean
+    if (loggedIn) {
+      navigate("/dashboard");  
+    } else {
+      navigate("/");
+    }
   }, []);
 
   return (
@@ -44,7 +56,9 @@ const ClaimHistory = () => {
       </a>
 
       {/* Page Title */}
-      <h1 className="text-3xl font-bold !text-gray-900 mb-8 mt-12 text-center">Claimed Coupons</h1>
+      <h1 className="text-3xl font-bold !text-gray-900 mb-8 mt-12 text-center">
+        Claimed Coupons
+      </h1>
 
       {/* Coupons List */}
       <div className="max-w-4xl mx-auto space-y-6">
@@ -66,13 +80,17 @@ const ClaimHistory = () => {
                 Coupon: {coupon.coupon}
               </h2>
               <p className="!text-gray-700 mb-1">
-                <span className="font-medium !text-gray-700">Browser Session:</span> {coupon.browserSession}
+                <span className="font-medium !text-gray-700">
+                  Browser Session:
+                </span>{" "}
+                {coupon.browserSession}
               </p>
               <p className="!text-gray-700 mb-1">
-                <span className="font-medium !text-gray-700">IP Address:</span> {coupon.ip}
+                <span className="font-medium !text-gray-700">IP Address:</span>{" "}
+                {coupon.ip}
               </p>
               <p className="!text-gray-700">
-                <span className="font-medium !text-gray-700">Claimed On:</span>{' '}
+                <span className="font-medium !text-gray-700">Claimed On:</span>{" "}
                 {new Date(coupon.timestamp).toLocaleString()}
               </p>
             </div>
