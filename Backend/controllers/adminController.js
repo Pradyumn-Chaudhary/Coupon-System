@@ -4,13 +4,6 @@ const bcrypt = require("bcryptjs");
 const Coupon = require("../models/coupon");
 const Claim = require("../models/claim");
 
-
-const generateToken = (admin) => {
-  return jwt.sign({ id: admin._id, username: admin.username }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
-};
-
 // Admin Login
 const adminLogin = async (req, res) => {
   try {
@@ -25,7 +18,7 @@ const adminLogin = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
-    res.json({ message: "Login successful", token});
+    res.json({ message: "Login successful" });
   } catch (error) {
     console.error("Admin Login Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -44,7 +37,7 @@ const createAdmin = async (req, res) => {
 
     const newAdmin = new Admin({ username, password });
     await newAdmin.save();
-    
+
     res.json({ message: "Admin created successfully" });
   } catch (error) {
     console.error("Admin Creation Error:", error);
@@ -97,4 +90,10 @@ const toggleCoupon = async (req, res) => {
   }
 };
 
-module.exports = { adminLogin, createAdmin, viewCoupons, addCoupon, toggleCoupon };
+module.exports = {
+  adminLogin,
+  createAdmin,
+  viewCoupons,
+  addCoupon,
+  toggleCoupon,
+};
