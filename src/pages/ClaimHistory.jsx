@@ -10,7 +10,7 @@ const ClaimHistory = () => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get("HOST/api/admin/claimHistory");
+        const response = await axios.get("Backend/api/admin/claimHistory");
         setcoupons(response.data);
       } catch (error) {
         console.error("Error fetching coupons:", error);

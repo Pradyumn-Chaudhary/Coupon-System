@@ -12,7 +12,7 @@ const AdminLogin = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("HOST/api/admin/login", {
+      const response = await axios.post("Backend/api/admin/login", {
         username,
         password,
       });

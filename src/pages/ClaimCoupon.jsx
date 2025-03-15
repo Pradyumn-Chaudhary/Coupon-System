@@ -8,7 +8,7 @@ const ClaimCoupon = () => {
 
   const handleClaim = async () => {
     try {
-      const response = await axios.post("HOST/api/claim");
+      const response = await axios.post("Backend/api/claim");
 
       //Access response.data
       toast.success(`Coupon Code: ${response.data.couponCode}`);
