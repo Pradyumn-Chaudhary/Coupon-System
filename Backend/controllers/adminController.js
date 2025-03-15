@@ -18,7 +18,6 @@ const adminLogin = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
-    localStorage.setItem("loggedIn", true);
     res.json({ message: "Login successful" });
   } catch (error) {
     console.error("Admin Login Error:", error);
@@ -27,24 +26,24 @@ const adminLogin = async (req, res) => {
 };
 
 // Create Admin (Run only once to create an admin user)
-// const createAdmin = async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-//     const existingAdmin = await Admin.findOne({ username });
+const createAdmin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const existingAdmin = await Admin.findOne({ username });
 
-//     if (existingAdmin) {
-//       return res.status(400).json({ message: "Admin already exists" });
-//     }
+    if (existingAdmin) {
+      return res.status(400).json({ message: "Admin already exists" });
+    }
 
-//     const newAdmin = new Admin({ username, password });
-//     await newAdmin.save();
+    const newAdmin = new Admin({ username, password });
+    await newAdmin.save();
 
-//     res.json({ message: "Admin created successfully" });
-//   } catch (error) {
-//     console.error("Admin Creation Error:", error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
+    res.json({ message: "Admin created successfully" });
+  } catch (error) {
+    console.error("Admin Creation Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 const viewCoupons = async (req, res) => {
   try {
