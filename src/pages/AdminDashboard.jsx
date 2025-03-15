@@ -7,6 +7,9 @@ const Dashboard = () => {
   const navigate = useNavigate(); 
   const [coupons, setCoupons] = useState([]);
   const [couponCode, setCouponCode] = useState("")
+  const [updateDiv, setupdateDiv] = useState(false)
+  const [code, setcode] = useState("");
+  const [newCode, setnewCode] = useState("");
 
   useEffect(() => {
     const fetchCoupons = async () => {
@@ -51,9 +54,26 @@ const Dashboard = () => {
     }
   };
 
+  const handleUpdateDiv = (code) => {
+    setupdateDiv(true)
+    setcode(code)
+  }
+
   const handleLogout = () => {
     localStorage.removeItem("isLogged");  
     window.location.href = "/"; 
+  };
+
+  const handleUpdateCoupon = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/admin/updateCoupon', { code, newCode });
+      toast.success(`${response.data.message}`);
+      setCoupons(coupons.map((coupon) => (coupon.code === code ? { ...coupon, code: newCode } : coupon)));
+      setupdateDiv(false)
+      setnewCode("");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error updating coupon.");
+    }
   };
 
   return (
@@ -71,6 +91,7 @@ const Dashboard = () => {
               <img src="https://static.vecteezy.com/system/resources/previews/000/271/116/non_2x/coupon-template-vector.jpg" alt="coupon" />
               <h2 className="text-xl font-semibold !text-gray-800 mb-2">{coupon.code}</h2>
               <p className="!text-gray-600">Status: {coupon.enabled ? "Enabled" : "Disabled"}</p>
+              <div className='flex justify-between'>
               <button
                 onClick={() => handleToggleCoupon(coupon.code)}
                 className={`mt-2 px-4 py-2 rounded-md font-semibold text-white ${
@@ -78,7 +99,12 @@ const Dashboard = () => {
                 }`}
               >
                 {coupon.enabled ? "Disable" : "Enable"}
-              </button>
+                </button>
+                <button className="mt-2 px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                onClick={() => handleUpdateDiv(coupon.code)}>
+                  Update
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -109,7 +135,47 @@ const Dashboard = () => {
           >
             Add Coupon
           </button>
-        </form>
+          </form>
+          
+         {updateDiv && (
+            <div className='space-y-4 mt-7'>
+            <div>
+              <label htmlFor="couponCode" className="!text-gray-700 font-medium">
+                Current Code
+                </label>
+                <input
+                type="text"
+                id="code"
+                value={code}
+                readOnly 
+                className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 !text-gray-900"
+              />
+              <input
+                type="text"
+                id="newCode"
+                value={newCode}
+                onChange={(e) => setnewCode(e.target.value)}
+                className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 !text-gray-900"
+                placeholder="Enter new code"
+              />
+            </div>
+            <button
+              type="button"
+                className="w-full bg-blue-600 !text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
+                onClick={handleUpdateCoupon}
+            >
+              Update
+            </button>
+            <button
+              type="button"
+                className="w-full bg-red-600 !text-white py-2 rounded-md font-semibold hover:bg-red-700 transition-colors duration-300 cursor-pointer"
+                onClick={() => setupdateDiv(false)}
+            >
+              Cancel
+            </button>
+            </div>
+         )}
+
        </div>
         <div className='flex justify-between gap-7'>
           <Link to={"/claim-history"} className='w-full'>
