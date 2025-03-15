@@ -10,9 +10,7 @@ const ClaimHistory = () => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/admin/claimHistory"
-        );
+        const response = await axios.get("HOST/api/admin/claimHistory");
         setcoupons(response.data);
       } catch (error) {
         console.error("Error fetching coupons:", error);
@@ -23,9 +21,9 @@ const ClaimHistory = () => {
   }, []);
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLogged") === "true";  // Convert to Boolean
+    const loggedIn = localStorage.getItem("isLogged") === "true"; // Convert to Boolean
     if (loggedIn) {
-      navigate("/dashboard");  
+      navigate("/dashboard");
     } else {
       navigate("/");
     }

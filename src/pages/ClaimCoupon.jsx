@@ -4,11 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 const ClaimCoupon = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleClaim = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/claim");
+      const response = await axios.post("HOST/api/claim");
 
       //Access response.data
       toast.success(`Coupon Code: ${response.data.couponCode}`);
@@ -18,9 +18,9 @@ const ClaimCoupon = () => {
   };
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLogged") === "true";  // Convert to Boolean
+    const loggedIn = localStorage.getItem("isLogged") === "true"; // Convert to Boolean
     if (loggedIn) {
-      navigate("/dashboard");  
+      navigate("/dashboard");
     }
   }, []);
 
