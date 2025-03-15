@@ -3,6 +3,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClaimCoupon from "./pages/ClaimCoupon";
 import NotFound from "./pages/NotFound";
+import ClaimHistory from "./pages/ClaimHistory"
 
 function App() {
   return (

@@ -2,11 +2,12 @@ const Coupon = require("../models/coupon");
 const Claim = require("../models/claim");
 const mongoose = require("mongoose");
 
-// Function to get the next available coupon in round-robin order
+// Function to claim a coupon in round-robin order
 const claimCoupon = async (req, res) => {
   try {
     const userIP = req.ip;
-    const userSession = req.cookies.session || Math.random().toString(36).substring(2);
+    const userSession =
+      req.cookies.session || Math.random().toString(36).substring(2);
 
     const cooldownPeriod = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -17,28 +18,31 @@ const claimCoupon = async (req, res) => {
 
     if (existingClaim) {
       const timeSinceLastClaim = Date.now() - existingClaim.timestamp.getTime();
-
       if (timeSinceLastClaim < cooldownPeriod) {
-        const remainingTime = Math.ceil((cooldownPeriod - timeSinceLastClaim) / (1000 * 60)); // Convert to minutes
-        return res.status(403).json({ 
-          message: `You can claim again in ${remainingTime} minutes.` 
+        const remainingTime = Math.ceil(
+          (cooldownPeriod - timeSinceLastClaim) / (1000 * 60)
+        );
+        return res.status(403).json({
+          message: `You can claim again in ${remainingTime} minutes.`,
         });
       }
     }
 
-    // Get the next available coupon (sorted by _id)
+    // Get the next available coupon
     const coupon = await Coupon.findOne({ enabled: true }).sort({ _id: 1 });
 
     if (!coupon) {
-      return res.status(404).json({ message: "No coupons available." });
+      return res.status(404).json({ message: "No coupons available." }); // ✅ Fix: Stop execution here
     }
 
-    // Remove the coupon from the coupons collection
+    const couponCode = coupon?.code; // Store coupon ID before deleting
+
+    // Remove the coupon from the database
     await Coupon.deleteOne({ _id: coupon._id });
 
     // Store claim record
     await Claim.create({
-      coupon: coupon._id,
+      coupon: couponCode, // Save coupon ID instead of the actual code
       ip: userIP,
       browserSession: userSession,
     });
@@ -46,12 +50,12 @@ const claimCoupon = async (req, res) => {
     // Set a session cookie for abuse prevention
     res.cookie("session", userSession, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    }); // 1 day
+      maxAge: cooldownPeriod,
+    });
 
     res.json({
-      message: "Coupon claimed successfully!",
-      couponCode: coupon.code,
+      message: "Claim successful",
+      couponCode: couponCode,
     });
   } catch (error) {
     console.error("Claim Coupon Error:", error);
