@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";  
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const AdminLogin = () => {
   const navigate = useNavigate(); 
@@ -36,7 +37,25 @@ const AdminLogin = () => {
 
   return (
     <div className="bg-neutral-400 h-screen w-screen flex justify-center items-center">
-       <ToastContainer />
+      <ToastContainer />
+      <Link to={"/"}>
+      <button className="absolute top-0 left-0 m-4 flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-300 cursor-pointer">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 19l-7-7 7-7"
+    />
+  </svg>
+</button>
+      </Link>
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
