@@ -12,10 +12,13 @@ const AdminLogin = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`${process.env.Backend}/api/admin/login`, {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/login`,
+        {
+          username,
+          password,
+        }
+      );
       toast.success(`${response.data.message}`);
       localStorage.setItem("isLogged", "true");
       setisLogged(true);

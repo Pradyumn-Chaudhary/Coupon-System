@@ -14,7 +14,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get(`${process.env.Backend}/api/admin/coupons`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/admin/coupons`
+        );
         setCoupons(response.data);
       } catch (error) {
         console.error("Error fetching coupons:", error);
@@ -35,9 +37,12 @@ const Dashboard = () => {
 
   const handleAddCoupon = async () => {
     try {
-      const response = await axios.post(`${process.env.Backend}/api/admin/coupon/add`, {
-        code: couponCode,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/coupon/add`,
+        {
+          code: couponCode,
+        }
+      );
       toast.success(`${response.data.message}`);
       setCoupons([...coupons, { code: couponCode, enabled: true }]);
       setCouponCode("");
@@ -48,9 +53,12 @@ const Dashboard = () => {
 
   const handleToggleCoupon = async (code) => {
     try {
-      const response = await axios.post(`${process.env.Backend}/api/admin/coupon/toggle`, {
-        code,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/coupon/toggle`,
+        {
+          code,
+        }
+      );
       toast.success(`${response.data.message}`);
       setCoupons(
         coupons.map((coupon) =>
@@ -76,10 +84,13 @@ const Dashboard = () => {
 
   const handleUpdateCoupon = async () => {
     try {
-      const response = await axios.post(`${process.env.Backend}/api/admin/updateCoupon`, {
-        code,
-        newCode,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/updateCoupon`,
+        {
+          code,
+          newCode,
+        }
+      );
       toast.success(`${response.data.message}`);
       setCoupons(
         coupons.map((coupon) =>
