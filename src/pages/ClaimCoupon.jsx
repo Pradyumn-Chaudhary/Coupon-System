@@ -1,19 +1,28 @@
-import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
 const ClaimCoupon = () => {
+  const navigate = useNavigate(); 
+
   const handleClaim = async () => {
     try {
       const response = await axios.post("http://localhost:5000/api/claim");
 
-      // Correctly access response.data
+      //Access response.data
       toast.success(`Coupon Code: ${response.data.couponCode}`);
     } catch (error) {
       toast.error(error.response?.data?.message || "Error claiming coupon.");
     }
   };
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("isLogged") === "true";  // Convert to Boolean
+    if (loggedIn) {
+      navigate("/dashboard");  
+    }
+  }, []);
 
   return (
     <div className="h-screen w-screen flex justify-center items-center relative bg-neutral-400">
