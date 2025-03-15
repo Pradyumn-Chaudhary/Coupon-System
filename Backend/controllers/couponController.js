@@ -6,17 +6,24 @@ const mongoose = require("mongoose");
 const claimCoupon = async (req, res) => {
   try {
     const userIP = req.ip;
-    const userSession =
-      req.cookies.session || Math.random().toString(36).substring(2);
+    const userSession = req.cookies.session || Math.random().toString(36).substring(2);
 
-    // Check if the user has already claimed a coupon (IP or session-based abuse prevention)
+    const cooldownPeriod = 24 * 60 * 60 * 1000; // 24 hours
+
+    // Find the last claim based on IP or Session
     const existingClaim = await Claim.findOne({
       $or: [{ ip: userIP }, { browserSession: userSession }],
-    });
+    }).sort({ timestamp: -1 });
+
     if (existingClaim) {
-      return res
-        .status(403)
-        .json({ message: "You have already claimed a coupon." });
+      const timeSinceLastClaim = Date.now() - existingClaim.timestamp.getTime();
+
+      if (timeSinceLastClaim < cooldownPeriod) {
+        const remainingTime = Math.ceil((cooldownPeriod - timeSinceLastClaim) / (1000 * 60)); // Convert to minutes
+        return res.status(403).json({ 
+          message: `You can claim again in ${remainingTime} minutes.` 
+        });
+      }
     }
 
     // Get the next available coupon (sorted by _id)
