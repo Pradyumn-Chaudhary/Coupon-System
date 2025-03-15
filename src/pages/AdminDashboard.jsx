@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 const Dashboard = () => {
+  const navigate = useNavigate(); 
   const [coupons, setCoupons] = useState([]);
   const [couponCode, setCouponCode] = useState("")
 
@@ -18,6 +19,15 @@ const Dashboard = () => {
     };
 
     fetchCoupons();
+  }, []);
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("isLogged") === "true";  // Convert to Boolean
+    if (loggedIn) {
+      navigate("/dashboard");  
+    } else {
+      navigate("/");
+    }
   }, []);
 
   const handleAddCoupon = async () => {

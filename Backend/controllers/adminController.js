@@ -90,10 +90,21 @@ const toggleCoupon = async (req, res) => {
   }
 };
 
+const claimHistory = async (req, res) => {
+  try {
+    const claims = await Claim.find().sort({ timestamp: -1 });
+    res.json(claims);
+  } catch (error) {
+    console.error("Claim History Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   adminLogin,
   createAdmin,
   viewCoupons,
   addCoupon,
   toggleCoupon,
+  claimHistory,
 };
