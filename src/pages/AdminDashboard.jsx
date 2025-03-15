@@ -14,7 +14,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const response = await axios.get("Backend/api/admin/coupons");
+        const response = await axios.get(`${process.env.Backend}/api/admin/coupons`);
         setCoupons(response.data);
       } catch (error) {
         console.error("Error fetching coupons:", error);
@@ -35,7 +35,7 @@ const Dashboard = () => {
 
   const handleAddCoupon = async () => {
     try {
-      const response = await axios.post("Backend/api/admin/coupon/add", {
+      const response = await axios.post(`${process.env.Backend}/api/admin/coupon/add`, {
         code: couponCode,
       });
       toast.success(`${response.data.message}`);
@@ -48,7 +48,7 @@ const Dashboard = () => {
 
   const handleToggleCoupon = async (code) => {
     try {
-      const response = await axios.post("Backend/api/admin/coupon/toggle", {
+      const response = await axios.post(`${process.env.Backend}/api/admin/coupon/toggle`, {
         code,
       });
       toast.success(`${response.data.message}`);
@@ -76,7 +76,7 @@ const Dashboard = () => {
 
   const handleUpdateCoupon = async () => {
     try {
-      const response = await axios.post("Backend/api/admin/updateCoupon", {
+      const response = await axios.post(`${process.env.Backend}/api/admin/updateCoupon`, {
         code,
         newCode,
       });
