@@ -24,9 +24,7 @@ const ClaimHistory = () => {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLogged") === "true"; // Convert to Boolean
-    if (loggedIn) {
-      navigate("/dashboard");
-    } else {
+    if (!loggedIn) {
       navigate("/");
     }
   }, []);
