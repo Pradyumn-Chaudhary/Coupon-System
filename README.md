@@ -89,7 +89,7 @@ MONGO_URI=your_mongodb_connection_string
 Frontend
 
 ```
-Backend=your_backend_URL
+VITE_BACKEND_URL=your_backend_URL
 ```
 
 ### **5️⃣ Run the Project**
